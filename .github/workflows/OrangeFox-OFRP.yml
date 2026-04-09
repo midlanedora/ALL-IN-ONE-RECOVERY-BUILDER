@@ -134,15 +134,19 @@ jobs:
 
     - name: Check if Recovery Exist
       run: |
-        cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}
-        if [ -f OrangeFox*.img ]; then
+        # Cari file OrangeFox*.img di seluruh folder 'work' atau 'OrangeFox'
+        export RECOVERY_OUT=$(find $GITHUB_WORKSPACE -name "OrangeFox*.img" -type f | head -n 1)
+        
+        if [ -f "$RECOVERY_OUT" ]; then
           echo "CHECK_IMG_IS_OK=true" >> $GITHUB_ENV
-          echo "FILE_PATH=$(pwd)" >> $GITHUB_ENV
-          echo "MD5_IMG=$(md5sum OrangeFox*.img | cut -d ' ' -f 1)" >> $GITHUB_ENV
+          echo "FILE_PATH=$(dirname $RECOVERY_OUT)" >> $GITHUB_ENV
+          echo "MD5_IMG=$(md5sum $RECOVERY_OUT | cut -d ' ' -f 1)" >> $GITHUB_ENV
+          echo "Berhasil menemukan: $RECOVERY_OUT"
         else
-          echo "Recovery out directory is empty."
+          echo "Aduh, file OrangeFox*.img gak ketemu di folder manapun!"
           exit 1
         fi
+
 
     - name: Rename the Recovery
       run: |
