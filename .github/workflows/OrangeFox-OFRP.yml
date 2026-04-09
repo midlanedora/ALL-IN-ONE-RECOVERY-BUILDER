@@ -134,7 +134,6 @@ jobs:
 
     - name: Check if Recovery Exist
       run: |
-              run: |
         cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}/out/target/product/${{ github.event.inputs.DEVICE_NAME }}
         if [ -f OrangeFox*.img ]; then
           echo "CHECK_IMG_IS_OK=true" >> $GITHUB_ENV
